@@ -124,24 +124,6 @@ coordinate* getNeighbors(coordinate place) {
 	return getNeighbors(place, false);
 }
 
-template <typename T>
-void printList(list<T> l) {
-	typename list<T>::iterator it;
-	for (it = l.begin(); it != l.end(); it++) {
-		cout << *it << ',';
-	}
-	cout << '\n';
-}
-
-template <>
-void printList<coordinate>(list<coordinate> l) {
-	list<coordinate>::iterator it;
-	for (it = l.begin(); it != l.end(); it++) {
-		cout << (*it).x << ',' << (*it).y << '\n';
-	}
-	cout << '\n';
-}
-
 class BoardDescription {
 	private: 
 		void removePossibilityFromCoordinate(coordinate cor, int possibility) {
@@ -162,10 +144,6 @@ class BoardDescription {
 			for (int i = 0; i < 20; i++) {
 				removePossibilityFromCoordinate(place, getCellContent(coordianates[i]));
 			}
-		}
-
-		list<int> getPossibilitiesByCoordinate(coordinate c) {
-			return possibilitiesArray[c.x][c.y];
 		}
 
 		void updatePossibilitieArrays() {
@@ -326,7 +304,7 @@ class BoardDescription {
 		void printBoard() {
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
-					if (board[i][j] > 0) {
+					if (board[i][j] != 0) {
 						cout << board[i][j];
 					}
 					else {
@@ -350,10 +328,21 @@ class BoardDescription {
 			return true;
 		}
 
-		coordinate getFirstEmptyCoordinate() {
+		bool isBoardFull() {
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
 					coordinate currentcor = coordinate{ i, j };
+					if (getCellContent(currentcor) == 0) {
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+
+		coordinate getFirstEmptyCoordinate() {
+			for (int i = 0; i < 9; i++) {
+				for (int j = 0; j < 9; j++) {
 					if (board[i][j] == 0) {
 						return coordinate{ i, j };
 					}
@@ -361,20 +350,67 @@ class BoardDescription {
 			}
 			return coordinate{ -1, -1 };
 		}
+
+		list<int> getPossibilitiesByCoordinate(coordinate c) {
+			return possibilitiesArray[c.x][c.y];
+		}
 };
 
+BoardDescription insertFirstPossibility(BoardDescription desc) {
+	coordinate emptyCor = desc.getFirstEmptyCoordinate();
+	list<int> possibilities = desc.getPossibilitiesByCoordinate(emptyCor);
+	BoardDescription newDesc = desc;
+	newDesc.insertToCoordinate(emptyCor, possibilities.front());
+	return newDesc;
+}
+
+int invalidBoard[9][9]= { -1 };
+const BoardDescription invalidBoardDescription(invalidBoard);
+
+BoardDescription eliminateFirstPossibility(BoardDescription desc) {
+	coordinate emptyCor = desc.getFirstEmptyCoordinate();
+	desc.possibilitiesArray[emptyCor.x][emptyCor.y].pop_front();
+	if (desc.getPossibilitiesByCoordinate(emptyCor).size() == 0) {
+		return invalidBoardDescription;
+	}
+	return desc;
+}
+
+BoardDescription solveBoard(BoardDescription currentDesc) {
+	BoardDescription newDesc = insertFirstPossibility(currentDesc);
+	if (newDesc.isBoardFull()) {
+		return newDesc;
+	}
+	if (newDesc.isBoardValid()) {
+		BoardDescription possibleSolution = solveBoard(newDesc);
+		if (possibleSolution.board[0][0] != -1) {
+			return possibleSolution;
+		}
+		possibleSolution = eliminateFirstPossibility(currentDesc);
+		if (possibleSolution.board[0][0] == -1) {
+			return possibleSolution;
+		}
+		return solveBoard(possibleSolution);
+	}
+	BoardDescription possibleSolution = eliminateFirstPossibility(currentDesc);
+	if (possibleSolution.board[0][0] == -1) {
+		return possibleSolution;
+	}
+	return solveBoard(possibleSolution);
+}
 
 int main() {
-	int board[9][9] =					{ 0, 0, 3, 0, 0, 4, 0, 5, 8,
-															6, 0, 0, 1, 0, 0, 0, 0, 2,
-															2, 0, 4, 0, 0, 0, 0, 0 ,0,
-															0, 7, 9, 0, 0, 0, 0, 0, 0,
-															1, 0, 0, 0, 8, 0, 3, 0, 0,
-															0, 0, 0, 6, 0, 0, 0, 0, 0,
-															3, 0, 5, 0, 0, 8, 0, 9, 0,
-															0, 2, 0, 0, 9, 0, 0, 0, 1,
-															8, 0, 0, 0, 0, 0, 0, 0, 0 };
+	int board[9][9] = {	1, 0, 0, 0, 0, 7, 0, 9, 0,
+											0, 0, 3, 0, 2, 0, 0, 0, 8,
+											0, 0, 9, 6, 0, 0, 5, 0, 0,
+											0, 0, 5, 3, 0, 0, 9, 0, 0,
+											0, 1, 0, 0, 8, 0, 0, 0, 2,
+											6, 0, 0, 0, 0, 4, 0, 0, 0,
+											3, 0, 0, 0, 0, 0, 0, 1, 0,
+											0, 4, 0, 0, 0, 0, 0, 0, 7,
+											0, 0, 7, 0, 0, 0, 3, 0, 0 };
 
 	BoardDescription desc(board);
+	desc = solveBoard(desc);
 	desc.printBoard();
 }
