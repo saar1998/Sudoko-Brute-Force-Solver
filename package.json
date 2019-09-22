@@ -1,0 +1,19 @@
+{
+  "name": "sudoko-solver",
+  "version": "1.0.0",
+  "description": "sudoko solver",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saar1998/Sudoko-Brute-Force-Solver.git"
+  },
+  "author": "Saar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saar1998/Sudoko-Brute-Force-Solver/issues"
+  },
+  "homepage": "https://github.com/saar1998/Sudoko-Brute-Force-Solver#readme"
+}
