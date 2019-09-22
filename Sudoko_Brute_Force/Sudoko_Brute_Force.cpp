@@ -260,22 +260,15 @@ class BoardDescription {
 
 	public: 
 		list<int> possibilitiesArray[9][9];
-		int board[9][9];
+		vector<vector<int>> board;
 
-		BoardDescription(int currentBoard[9][9], list<int> currentPossibilitiesArray[9][9]) {
-			for (int i = 0; i < 9; i++) {
-				for (int j = 0; j < 9; j++) {
-					board[i][j] = currentBoard[i][j];
-					possibilitiesArray[i][j] = currentPossibilitiesArray[i][j];
-				}
+		BoardDescription(vector<vector<int>> currentBoard) {
+			board = currentBoard;
+			if (board[0].size() < 2) {
+				return;
 			}
-			updateBoard();
-		}
-
-		BoardDescription(int currentBoard[9][9]) {
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
-					board[i][j] = currentBoard[i][j];
 					for (int m = 1; m <= 9; m++) {
 						possibilitiesArray[i][j].insert(possibilitiesArray[i][j].end(), m);
 					}
@@ -364,7 +357,7 @@ BoardDescription insertFirstPossibility(BoardDescription desc) {
 	return newDesc;
 }
 
-int invalidBoard[9][9]= { -1 };
+vector<vector<int>> invalidBoard = { { -1 } };
 const BoardDescription invalidBoardDescription(invalidBoard);
 
 BoardDescription eliminateFirstPossibility(BoardDescription desc) {
@@ -399,18 +392,8 @@ BoardDescription solveBoard(BoardDescription currentDesc) {
 	return solveBoard(possibleSolution);
 }
 
-int main() {
-	int board[9][9] = {	1, 0, 0, 0, 0, 7, 0, 9, 0,
-											0, 0, 3, 0, 2, 0, 0, 0, 8,
-											0, 0, 9, 6, 0, 0, 5, 0, 0,
-											0, 0, 5, 3, 0, 0, 9, 0, 0,
-											0, 1, 0, 0, 8, 0, 0, 0, 2,
-											6, 0, 0, 0, 0, 4, 0, 0, 0,
-											3, 0, 0, 0, 0, 0, 0, 1, 0,
-											0, 4, 0, 0, 0, 0, 0, 0, 7,
-											0, 0, 7, 0, 0, 0, 3, 0, 0 };
-
+vector<vector<int>> solveSudoko (vector<vector<int>> board) {
 	BoardDescription desc(board);
 	desc = solveBoard(desc);
-	desc.printBoard();
+	return desc.board;
 }
