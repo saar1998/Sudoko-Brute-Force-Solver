@@ -5,6 +5,7 @@
 #include <set>
 #include <algorithm>
 #include <iterator>
+#include "Sudoko_Brute_Force.h"
 
 using namespace std;
 
@@ -392,7 +393,7 @@ BoardDescription solveBoard(BoardDescription currentDesc) {
 	return solveBoard(possibleSolution);
 }
 
-vector<vector<int>> solveSudoko (vector<vector<int>> board) {
+vector<vector<int>> Sudoko_Brute_Force::solveSudoko(vector<vector<int>> board) {
 	BoardDescription desc(board);
 	desc = solveBoard(desc);
 	return desc.board;
