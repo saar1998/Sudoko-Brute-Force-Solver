@@ -5,8 +5,8 @@
   "main": "index.js",
   "gypfile": true,
   "scripts": {
-    "build": "node-gyp rebuild",
-    "clean": "node-gyp clean"
+    "build": "node-gyp -C ./src rebuild",
+    "clean": "node-gyp -C ./src clean"
   },
   "devDependencies": {
     "node-gyp": "^3.7.0"

@@ -1,4 +1,4 @@
-const SolveSudoko = require('./build/Release/SudokoSolver.node');
+const SolveSudoko = require('./src/build/Release/SudokoSolver.node');
 
 let solver = {};
 
