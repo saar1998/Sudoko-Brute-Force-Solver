@@ -1,8 +1,10 @@
-const SolveSudoko = require('./src/build/Release/SudokoSolver.node');
+const SolveSudoko = require('./src/build/Release/SudokoSolver.node'),
+  Validator = require('./src/boardValidation');
 
 let solver = {};
 
 solver.solve = (arr) => {
+  Validator.validateBoard(arr);
   const initialObject = internals.convertArrayToObject(arr);
   const solvedObject = SolveSudoko.solve(initialObject);
   return internals.convertObjectToArray(solvedObject);
