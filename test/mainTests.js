@@ -9,4 +9,8 @@ describe('main tests', () => {
     const solution = Solve(data.goodBoard);
     Expect(solution).to.eql(data.goodBoardSolution);
   });
+
+  it('should throw an error when provided with unsolveable board', () => {
+    Expect(Solve.bind(this, data.unsolveableBoard)).to.throw('Impossible Board');
+  });
 });
