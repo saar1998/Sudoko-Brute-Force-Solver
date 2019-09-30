@@ -6,10 +6,13 @@
   "gypfile": true,
   "scripts": {
     "build": "node-gyp -C ./src rebuild",
-    "clean": "node-gyp -C ./src clean"
+    "clean": "node-gyp -C ./src clean",
+    "test": "node_modules/mocha/bin/mocha"
   },
   "devDependencies": {
-    "node-gyp": "^3.7.0"
+    "node-gyp": "^3.7.0",
+    "mocha": "6.2.0",
+    "chai": "4.2.0"
   },
   "dependencies": {
     "node-addon-api": "^1.3.0"
