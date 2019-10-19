@@ -352,6 +352,10 @@ class BoardDescription {
 
 BoardDescription insertFirstPossibility(BoardDescription desc) {
 	coordinate emptyCor = desc.getFirstEmptyCoordinate();
+	if (emptyCor.x == -1) {
+		desc.board[0][0] = -1;
+		return desc;
+	}
 	list<int> possibilities = desc.getPossibilitiesByCoordinate(emptyCor);
 	BoardDescription newDesc = desc;
 	newDesc.insertToCoordinate(emptyCor, possibilities.front());
@@ -372,6 +376,9 @@ BoardDescription eliminateFirstPossibility(BoardDescription desc) {
 
 BoardDescription solveBoard(BoardDescription currentDesc) {
 	BoardDescription newDesc = insertFirstPossibility(currentDesc);
+	if(newDesc.board[0][0] == -1) {
+		return newDesc;
+	}
 	if (newDesc.isBoardFull()) {
 		return newDesc;
 	}
